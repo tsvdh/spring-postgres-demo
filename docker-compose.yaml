@@ -3,7 +3,9 @@ services:
     image: postgres:latest
     container_name: spring-postgres-demo
     environment:
+      POSTGRES_USER: admin
       POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: test
     ports:
       - "5432:5432"
     volumes:
