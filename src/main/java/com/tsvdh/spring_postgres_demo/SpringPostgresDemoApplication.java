@@ -1,18 +1,14 @@
 package com.tsvdh.spring_postgres_demo;
 
-import com.tsvdh.spring_postgres_demo.dao.ZooDAO;
-import com.tsvdh.spring_postgres_demo.model.Animal;
+import com.tsvdh.spring_postgres_demo.jdbc.repository.ZooRepository;
+import com.tsvdh.spring_postgres_demo.jdbc.model.Animal;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.util.Random;
 
 @SpringBootApplication
 @RequiredArgsConstructor
@@ -25,14 +21,17 @@ public class SpringPostgresDemoApplication implements CommandLineRunner {
 		SpringApplication.run(SpringPostgresDemoApplication.class, args);
 	}
 
-	private final ZooDAO zooDAO;
+	private final ZooRepository zooRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
 		logger.info("Hello world!");
 
-		for (int i = 0; i < 8; i++)
-			zooDAO.addAnimal(new Animal(-1, "monkey", 20 + i, 2, 1));
+		// for (int i = 0; i < 8; i++)
+		// 	zooDAO.addAnimal(new Animal(-1, "monkey", 20 + i, 2, 1));
+
+		// zooRepository.addAnimal(new Animal(-1, "baby lion", 50, 1, 2));
+		logger.info(zooRepository.getAnimalsByEnclosure().toString());
 
 		// logger.info(zooDAO.getAnimal(1).toString());
 		// stringUtils.nextAlphabetic(5);
