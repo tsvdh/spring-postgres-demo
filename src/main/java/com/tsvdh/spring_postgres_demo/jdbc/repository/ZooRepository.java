@@ -36,12 +36,13 @@ public class ZooRepository {
 
     private static AnimalsByEnclosure makeAnimalsByEnclosure(ResultSet resultSet) throws SQLException {
         return new AnimalsByEnclosure(
+                resultSet.getInt("enclosure_id"),
                 Arrays.stream(resultSet.getString("types")
                                        .split(",")).collect(Collectors.toSet()),
+                resultSet.getInt("amount"),
                 resultSet.getInt("summed_weight"),
                 resultSet.getFloat("avg_weight"),
-                resultSet.getInt("summed_weight"),
-                resultSet.getInt("enclosure_id")
+                resultSet.getInt("summed_weight")
         );
     }
 
@@ -70,12 +71,38 @@ public class ZooRepository {
         );
     }
 
-    public void addAnimal(Animal animal) {
-        jdbcTemplate.update(
+    public int addAnimal(Animal animal) {
+        return jdbcTemplate.query(
                 """
                 INSERT INTO animals VALUES (default, ?, ?, ?, ?)
                 """,
-                animal.type(), animal.weight(), animal.enclosure_id(), animal.hunger());
+                rs -> {
+                    rs.next();
+                    return rs.getInt("id");
+                },
+                animal.type(), animal.weight(), animal.enclosure_id(), animal.hunger()
+        );
+    }
+
+    public boolean updateAnimal(int id, Animal animal) {
+        return jdbcTemplate.update(
+                """
+                UPDATE animals
+                SET type = ?, weight = ?, enclosure_id = ?, hunger = ?
+                WHERE id = ?
+                """,
+                animal.type(), animal.weight(), animal.enclosure_id(), animal.hunger(), id
+        ) > 0;
+    }
+
+    public boolean deleteAnimal(int id) {
+        return jdbcTemplate.update(
+                """
+                DELETE FROM animals
+                WHERE id = ?
+                """,
+                id
+        ) > 0;
     }
 
     public Enclosure getEnclosure(int id) {
@@ -92,15 +119,6 @@ public class ZooRepository {
         );
     }
 
-    public void addEnclosure(Enclosure enclosure) {
-        jdbcTemplate.update(
-                """
-                INSERT INTO enclosures VALUES (default, ?, ?)
-                """,
-                enclosure.capacity(), enclosure.food()
-        );
-    }
-
     public Collection<Enclosure> getEnclosures() {
         return jdbcTemplate.query(
                 """
@@ -110,14 +128,67 @@ public class ZooRepository {
         );
     }
 
+    public int addEnclosure(Enclosure enclosure) {
+        return jdbcTemplate.query(
+                """
+                INSERT INTO enclosures VALUES (default, ?, ?) RETURNING id;
+                """,
+                rs -> {
+                    rs.next();
+                    return rs.getInt("id");
+                },
+                enclosure.capacity(), enclosure.food()
+        );
+    }
+
+    public boolean updateEnclosure(int id, Enclosure enclosure) {
+        return jdbcTemplate.update(
+                """
+                UPDATE enclosures
+                SET capacity = ?, food = ?
+                WHERE id = ?
+                """,
+                enclosure.capacity(), enclosure.food(), id
+        ) > 0;
+    }
+
+    public boolean deleteEnclosure(int id) {
+        return jdbcTemplate.update(
+                """
+                DELETE FROM enclosures
+                WHERE id = ?
+                """,
+                id
+        ) > 0;
+    }
+
+    public Collection<AnimalsByEnclosure> getAnimalsByEnclosure(int id) {
+        return jdbcTemplate.query(
+                """
+                SELECT e.id as enclosure_id,
+                       string_agg(a.type, ',') as types,
+                       count(*) as amount,
+                       sum(a.weight) as summed_weight,
+                       avg(a.weight) as avg_weight,
+                       sum(a.hunger) as summed_hunger
+                FROM animals a JOIN enclosures e ON a.enclosure_id = e.id
+                WHERE e.id = ?
+                GROUP BY e.id
+                """,
+                (rs, _) -> makeAnimalsByEnclosure(rs),
+                id
+        );
+    }
+
     public Collection<AnimalsByEnclosure> getAnimalsByEnclosure() {
         return jdbcTemplate.query(
                 """
-                SELECT string_agg(a.type, ',') as types,
+                SELECT e.id as enclosure_id,
+                       string_agg(a.type, ',') as types,
+                       count(*) as amount,
                        sum(a.weight) as summed_weight,
                        avg(a.weight) as avg_weight,
-                       sum(a.hunger) as summed_hunger,
-                       e.id as enclosure_id
+                       sum(a.hunger) as summed_hunger
                 FROM animals a JOIN enclosures e ON a.enclosure_id = e.id
                 GROUP BY e.id
                 """,
