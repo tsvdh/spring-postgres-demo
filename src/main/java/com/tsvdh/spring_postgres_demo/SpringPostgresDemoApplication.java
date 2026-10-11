@@ -36,6 +36,6 @@ public class SpringPostgresDemoApplication implements CommandLineRunner {
 		// logger.info(zooDAO.getAnimal(1).toString());
 		// stringUtils.nextAlphabetic(5);
 
-
+		System.out.println(zooService.getAnimalsByEnclosure().toString());
 	}
 }

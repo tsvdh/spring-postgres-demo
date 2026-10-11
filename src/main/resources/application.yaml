@@ -5,3 +5,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/zoo
     username: admin
     password: 12345
+  flyway:
+    locations: classpath:db/migration,classpath:com/tsvdh/spring_postgres_demo/db/migration
