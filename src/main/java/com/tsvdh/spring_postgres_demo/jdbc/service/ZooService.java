@@ -5,9 +5,7 @@ import com.tsvdh.spring_postgres_demo.jdbc.model.Enclosure;
 import com.tsvdh.spring_postgres_demo.jdbc.model.projection.AnimalsByEnclosure;
 import com.tsvdh.spring_postgres_demo.jdbc.repository.ZooRepository;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -15,19 +13,13 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ZooService {
-    
-    private static final Logger logger = LoggerFactory.getLogger(ZooService.class);
 
     private final ZooRepository zooRepository;
 
     public Optional<Animal> getAnimal(int id) {
-        try {
-            return Optional.of(zooRepository.getAnimal(id));
-        } catch (DataAccessException e) {
-            logger.warn(e.getMessage());
-            return Optional.empty();
-        }
+        return Optional.of(zooRepository.getAnimal(id));
     }
 
     public Collection<Animal> getAnimals() {
@@ -35,39 +27,19 @@ public class ZooService {
     }
 
     public Optional<Integer> addAnimal(Animal animal) {
-        try {
-            return Optional.of(zooRepository.addAnimal(animal));
-        } catch (DataAccessException e) {
-            logger.warn(e.getMessage());
-            return Optional.empty();
-        }
+        return Optional.of(zooRepository.addAnimal(animal));
     }
 
     public boolean updateAnimal(int id, Animal animal) {
-        try {
-            return zooRepository.updateAnimal(id, animal);
-        } catch (DataAccessException e) {
-            logger.warn(e.getMessage());
-            return false;
-        }
+        return zooRepository.updateAnimal(id, animal);
     }
 
     public boolean deleteAnimal(int id) {
-        try {
-            return zooRepository.deleteAnimal(id);
-        } catch (DataAccessException e) {
-            logger.warn(e.getMessage());
-            return false;
-        }
+        return zooRepository.deleteAnimal(id);
     }
 
     public Optional<Enclosure> getEnclosure(int id) {
-        try {
-            return Optional.of(zooRepository.getEnclosure(id));
-        } catch (DataAccessException e) {
-            logger.warn(e.getMessage());
-            return Optional.empty();
-        }
+        return Optional.of(zooRepository.getEnclosure(id));
     }
 
     public Collection<Enclosure> getEnclosures() {
@@ -75,39 +47,19 @@ public class ZooService {
     }
 
     public Optional<Integer> addEnclosure(Enclosure enclosure) {
-        try {
-            return Optional.of(zooRepository.addEnclosure(enclosure));
-        } catch (DataAccessException e) {
-            logger.warn(e.getMessage());
-            return Optional.empty();
-        }
+        return Optional.of(zooRepository.addEnclosure(enclosure));
     }
 
     public boolean updateEnclosure(int id, Enclosure enclosure) {
-        try {
-            return zooRepository.updateEnclosure(id, enclosure);
-        } catch (DataAccessException e) {
-            logger.warn(e.getMessage());
-            return false;
-        }
+        return zooRepository.updateEnclosure(id, enclosure);
     }
 
     public boolean deleteEnclosure(int id) {
-        try {
-            return zooRepository.deleteEnclosure(id);
-        } catch (DataAccessException e) {
-            logger.warn(e.getMessage());
-            return false;
-        }
+        return zooRepository.deleteEnclosure(id);
     }
 
     public Optional<Collection<AnimalsByEnclosure>> getAnimalsByEnclosure(int id) {
-        try {
-            return Optional.of(zooRepository.getAnimalsByEnclosure(id));
-        } catch (DataAccessException e) {
-            logger.warn(e.getMessage());
-            return Optional.empty();
-        }
+        return Optional.of(zooRepository.getAnimalsByEnclosure(id));
     }
 
     public Collection<AnimalsByEnclosure> getAnimalsByEnclosure() {
