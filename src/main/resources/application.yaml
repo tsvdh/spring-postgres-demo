@@ -7,3 +7,6 @@ spring:
     password: 12345
   flyway:
     locations: classpath:db/migration,classpath:com/tsvdh/spring_postgres_demo/db/migration
+  shell:
+    history:
+      enabled: false

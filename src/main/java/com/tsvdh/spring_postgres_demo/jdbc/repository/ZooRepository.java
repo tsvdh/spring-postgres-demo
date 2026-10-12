@@ -4,6 +4,7 @@ import com.tsvdh.spring_postgres_demo.jdbc.model.Animal;
 import com.tsvdh.spring_postgres_demo.jdbc.model.Enclosure;
 import com.tsvdh.spring_postgres_demo.jdbc.model.projection.AnimalsByEnclosure;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +56,8 @@ public class ZooRepository {
                 WHERE id = ?
                 """,
                 rs -> {
-                    rs.next();
+                    if (!rs.next())
+                        throw new EmptyResultDataAccessException(1);
                     return makeAnimal(rs);
                 },
                 id
@@ -75,6 +77,7 @@ public class ZooRepository {
         return jdbcTemplate.query(
                 """
                 INSERT INTO animals VALUES (default, ?, ?, ?, ?)
+                RETURNING id;
                 """,
                 rs -> {
                     rs.next();
@@ -112,7 +115,8 @@ public class ZooRepository {
                 WHERE id = ?
                 """,
                 rs -> {
-                    rs.next();
+                    if (!rs.next())
+                        throw new EmptyResultDataAccessException(1);
                     return makeEnclosure(rs);
                 },
                 id
@@ -131,7 +135,8 @@ public class ZooRepository {
     public int addEnclosure(Enclosure enclosure) {
         return jdbcTemplate.query(
                 """
-                INSERT INTO enclosures VALUES (default, ?, ?) RETURNING id;
+                INSERT INTO enclosures VALUES (default, ?, ?)
+                RETURNING id;
                 """,
                 rs -> {
                     rs.next();

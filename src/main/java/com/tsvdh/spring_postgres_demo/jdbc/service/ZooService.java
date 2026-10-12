@@ -6,6 +6,7 @@ import com.tsvdh.spring_postgres_demo.jdbc.model.projection.AnimalsByEnclosure;
 import com.tsvdh.spring_postgres_demo.jdbc.repository.ZooRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -19,7 +20,11 @@ public class ZooService {
     private final ZooRepository zooRepository;
 
     public Optional<Animal> getAnimal(int id) {
-        return Optional.of(zooRepository.getAnimal(id));
+        try {
+            return Optional.of(zooRepository.getAnimal(id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Collection<Animal> getAnimals() {
@@ -39,7 +44,11 @@ public class ZooService {
     }
 
     public Optional<Enclosure> getEnclosure(int id) {
-        return Optional.of(zooRepository.getEnclosure(id));
+        try {
+            return Optional.of(zooRepository.getEnclosure(id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Collection<Enclosure> getEnclosures() {
