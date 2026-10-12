@@ -26,7 +26,7 @@ public class DataAccessExceptionCatcher {
             throw new RuntimeException("Method did not return 'Optional'");
         }
         catch (DataAccessException e) {
-            log.warn(e.getMessage());
+            log.warn(e.getMessage(), e);
             return Optional.empty();
         }
     }
@@ -40,7 +40,7 @@ public class DataAccessExceptionCatcher {
             throw new RuntimeException("Method did not return 'Boolean'");
         }
         catch (DataAccessException e) {
-            log.warn(e.getMessage());
+            log.warn(e.getMessage(), e);
             return false;
         }
     }

@@ -20,9 +20,9 @@ public class ZooRepository {
     private static Animal makeAnimal(ResultSet resultSet) throws SQLException {
         return new Animal(
                 resultSet.getInt("id"),
+                resultSet.getInt("enclosure_id"),
                 resultSet.getString("type"),
                 resultSet.getInt("weight"),
-                resultSet.getInt("enclosure_id"),
                 resultSet.getInt("hunger")
         );
     }
@@ -80,7 +80,7 @@ public class ZooRepository {
                     rs.next();
                     return rs.getInt("id");
                 },
-                animal.type(), animal.weight(), animal.enclosure_id(), animal.hunger()
+                animal.enclosure_id(), animal.type(), animal.weight(), animal.hunger()
         );
     }
 
@@ -91,7 +91,7 @@ public class ZooRepository {
                 SET type = ?, weight = ?, enclosure_id = ?, hunger = ?
                 WHERE id = ?
                 """,
-                animal.type(), animal.weight(), animal.enclosure_id(), animal.hunger(), id
+                animal.enclosure_id(), animal.type(), animal.weight(), animal.hunger(), id
         ) > 0;
     }
 
