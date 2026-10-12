@@ -30,11 +30,11 @@ public class ZooService {
         return Optional.of(zooRepository.addAnimal(animal));
     }
 
-    public boolean updateAnimal(int id, Animal animal) {
+    public Boolean updateAnimal(int id, Animal animal) {
         return zooRepository.updateAnimal(id, animal);
     }
 
-    public boolean deleteAnimal(int id) {
+    public Boolean deleteAnimal(int id) {
         return zooRepository.deleteAnimal(id);
     }
 
@@ -50,11 +50,11 @@ public class ZooService {
         return Optional.of(zooRepository.addEnclosure(enclosure));
     }
 
-    public boolean updateEnclosure(int id, Enclosure enclosure) {
+    public Boolean updateEnclosure(int id, Enclosure enclosure) {
         return zooRepository.updateEnclosure(id, enclosure);
     }
 
-    public boolean deleteEnclosure(int id) {
+    public Boolean deleteEnclosure(int id) {
         return zooRepository.deleteEnclosure(id);
     }
 
