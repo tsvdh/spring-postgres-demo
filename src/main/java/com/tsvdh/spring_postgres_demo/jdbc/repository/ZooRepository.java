@@ -4,17 +4,17 @@ import com.tsvdh.spring_postgres_demo.jdbc.model.Animal;
 import com.tsvdh.spring_postgres_demo.jdbc.model.Enclosure;
 import com.tsvdh.spring_postgres_demo.jdbc.model.projection.AnimalsByEnclosure;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Component
+@Repository
 @RequiredArgsConstructor
 public class ZooRepository {
 
@@ -49,17 +49,13 @@ public class ZooRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public Animal getAnimal(int id) {
+    public Optional<Animal> getAnimal(int id) {
         return jdbcTemplate.query(
                 """
                 SELECT * FROM animals
                 WHERE id = ?
                 """,
-                rs -> {
-                    if (!rs.next())
-                        throw new EmptyResultDataAccessException(1);
-                    return makeAnimal(rs);
-                },
+                rs -> rs.next() ? Optional.of(makeAnimal(rs)) : Optional.empty(),
                 id
         );
     }
@@ -108,17 +104,13 @@ public class ZooRepository {
         ) > 0;
     }
 
-    public Enclosure getEnclosure(int id) {
+    public Optional<Enclosure> getEnclosure(int id) {
         return jdbcTemplate.query(
                 """
                 SELECT * FROM enclosures
                 WHERE id = ?
                 """,
-                rs -> {
-                    if (!rs.next())
-                        throw new EmptyResultDataAccessException(1);
-                    return makeEnclosure(rs);
-                },
+                rs -> rs.next() ? Optional.of(makeEnclosure(rs)) : Optional.empty(),
                 id
         );
     }
