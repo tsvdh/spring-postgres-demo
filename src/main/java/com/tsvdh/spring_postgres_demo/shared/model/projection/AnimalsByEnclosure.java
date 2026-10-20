@@ -1,4 +1,4 @@
-package com.tsvdh.spring_postgres_demo.jdbc.model.projection;
+package com.tsvdh.spring_postgres_demo.shared.model.projection;
 
 import java.util.Set;
 

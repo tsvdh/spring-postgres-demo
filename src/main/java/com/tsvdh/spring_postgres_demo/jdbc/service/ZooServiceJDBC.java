@@ -1,11 +1,11 @@
 package com.tsvdh.spring_postgres_demo.jdbc.service;
 
-import com.tsvdh.spring_postgres_demo.jdbc.model.Animal;
-import com.tsvdh.spring_postgres_demo.jdbc.model.Enclosure;
-import com.tsvdh.spring_postgres_demo.jdbc.model.projection.AnimalsByEnclosure;
+import com.tsvdh.spring_postgres_demo.shared.model.Animal;
+import com.tsvdh.spring_postgres_demo.shared.model.Enclosure;
+import com.tsvdh.spring_postgres_demo.shared.model.projection.AnimalsByEnclosure;
 import com.tsvdh.spring_postgres_demo.jdbc.repository.ZooRepository;
+import com.tsvdh.spring_postgres_demo.shared.service.ZooService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -13,8 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
-public class ZooService {
+public class ZooServiceJDBC implements ZooService {
 
     private final ZooRepository zooRepository;
 
@@ -30,8 +29,8 @@ public class ZooService {
         return Optional.of(zooRepository.addAnimal(animal));
     }
 
-    public Boolean updateAnimal(int id, Animal animal) {
-        return zooRepository.updateAnimal(id, animal);
+    public Boolean updateAnimal(Animal animal) {
+        return zooRepository.updateAnimal(animal);
     }
 
     public Boolean deleteAnimal(int id) {
@@ -50,8 +49,8 @@ public class ZooService {
         return Optional.of(zooRepository.addEnclosure(enclosure));
     }
 
-    public Boolean updateEnclosure(int id, Enclosure enclosure) {
-        return zooRepository.updateEnclosure(id, enclosure);
+    public Boolean updateEnclosure(Enclosure enclosure) {
+        return zooRepository.updateEnclosure(enclosure);
     }
 
     public Boolean deleteEnclosure(int id) {

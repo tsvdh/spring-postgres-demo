@@ -1,4 +1,4 @@
-package com.tsvdh.spring_postgres_demo.jdbc.aspects;
+package com.tsvdh.spring_postgres_demo.shared.aspects;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @Component
 public class DataAccessExceptionCatcher {
 
-    @Around("execution(java.util.Optional com.tsvdh.spring_postgres_demo.jdbc.service.ZooService.*(..))")
+    @Around("execution(java.util.Optional com.tsvdh.spring_postgres_demo.*.service.*.*(..))")
     public Optional<?> catchAndReturnOptional(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             Object obj = joinPoint.proceed();
@@ -28,7 +28,7 @@ public class DataAccessExceptionCatcher {
         }
     }
 
-    @Around("execution(Boolean com.tsvdh.spring_postgres_demo.jdbc.service.ZooService.*(..))")
+    @Around("execution(Boolean com.tsvdh.spring_postgres_demo.*.service.*.*(..))")
     public boolean catchAndReturnBool(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             Object obj = joinPoint.proceed();

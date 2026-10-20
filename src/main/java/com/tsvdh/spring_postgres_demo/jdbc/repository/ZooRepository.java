@@ -1,8 +1,8 @@
 package com.tsvdh.spring_postgres_demo.jdbc.repository;
 
-import com.tsvdh.spring_postgres_demo.jdbc.model.Animal;
-import com.tsvdh.spring_postgres_demo.jdbc.model.Enclosure;
-import com.tsvdh.spring_postgres_demo.jdbc.model.projection.AnimalsByEnclosure;
+import com.tsvdh.spring_postgres_demo.shared.model.Animal;
+import com.tsvdh.spring_postgres_demo.shared.model.Enclosure;
+import com.tsvdh.spring_postgres_demo.shared.model.projection.AnimalsByEnclosure;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -79,18 +79,18 @@ public class ZooRepository {
                     rs.next();
                     return rs.getInt("id");
                 },
-                animal.enclosure_id(), animal.type(), animal.weight(), animal.hunger()
+                animal.getEnclosureId(), animal.getType(), animal.getWeight(), animal.getHunger()
         );
     }
 
-    public boolean updateAnimal(int id, Animal animal) {
+    public boolean updateAnimal(Animal animal) {
         return jdbcTemplate.update(
                 """
                 UPDATE animals
                 SET type = ?, weight = ?, enclosure_id = ?, hunger = ?
                 WHERE id = ?
                 """,
-                animal.enclosure_id(), animal.type(), animal.weight(), animal.hunger(), id
+                animal.getEnclosureId(), animal.getType(), animal.getWeight(), animal.getHunger(), animal.getId()
         ) > 0;
     }
 
@@ -134,18 +134,18 @@ public class ZooRepository {
                     rs.next();
                     return rs.getInt("id");
                 },
-                enclosure.capacity(), enclosure.food()
+                enclosure.getCapacity(), enclosure.getFood()
         );
     }
 
-    public boolean updateEnclosure(int id, Enclosure enclosure) {
+    public boolean updateEnclosure(Enclosure enclosure) {
         return jdbcTemplate.update(
                 """
                 UPDATE enclosures
                 SET capacity = ?, food = ?
                 WHERE id = ?
                 """,
-                enclosure.capacity(), enclosure.food(), id
+                enclosure.getCapacity(), enclosure.getFood(), enclosure.getId()
         ) > 0;
     }
 

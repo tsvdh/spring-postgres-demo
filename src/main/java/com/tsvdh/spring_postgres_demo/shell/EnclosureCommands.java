@@ -1,7 +1,7 @@
 package com.tsvdh.spring_postgres_demo.shell;
 
-import com.tsvdh.spring_postgres_demo.jdbc.model.Enclosure;
-import com.tsvdh.spring_postgres_demo.jdbc.service.ZooService;
+import com.tsvdh.spring_postgres_demo.shared.model.Enclosure;
+import com.tsvdh.spring_postgres_demo.shared.service.ZooService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.core.command.annotation.Argument;
@@ -17,23 +17,27 @@ import java.util.Optional;
 @CommandGroup(name = "Enclosure commands", prefix = "enclosures")
 public class EnclosureCommands {
 
-    private final ZooService zooService;
+    private final ZooServiceManager zooServiceManager;
+
+    private ZooService getService() {
+        return zooServiceManager.getService();
+    }
 
     @Command(name = "get", description = "Get enclosure")
     public void get(@Argument(index = 0, description = "id") int id) {
-        System.out.println(zooService.getEnclosure(id));
+        System.out.println(getService().getEnclosure(id));
     }
 
     @Command(name = "get-all", description = "Get all enclosures")
     public void getAll() {
-        zooService.getEnclosures().forEach(System.out::println);
+        getService().getEnclosures().forEach(System.out::println);
     }
 
     @Command(name = "add", description = "Add enclosure")
     public void add(@Argument(index = 0, description = "capacity") int capacity,
                     @Argument(index = 1, description = "food") int food
     ) {
-        Optional<Integer> newId = zooService.addEnclosure(new Enclosure(-1, capacity, food));
+        Optional<Integer> newId = getService().addEnclosure(new Enclosure(null, capacity, food));
         newId.ifPresent(System.out::println);
     }
 
@@ -42,13 +46,13 @@ public class EnclosureCommands {
                        @Argument(index = 1, description = "capacity") int capacity,
                        @Argument(index = 2, description = "food") int food
     ) {
-        boolean success = zooService.updateEnclosure(id, new Enclosure(-1, capacity, food));
+        boolean success = getService().updateEnclosure(new Enclosure(id, capacity, food));
         System.out.printf("Success: %s\n", success);
     }
 
     @Command(name = "delete", description = "Delete enclosure")
     public void delete(@Argument(index = 0, description = "id") int id) {
-        boolean success = zooService.deleteEnclosure(id);
+        boolean success = getService().deleteEnclosure(id);
         System.out.printf("Success: %s\n", success);
     }
 }
